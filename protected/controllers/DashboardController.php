@@ -64,9 +64,14 @@ class DashboardController extends Controller
 		$this->menu = 'contributions';
 		
 		if (!Yii::app()->user->isGuest){
-			$types = ContributionType::model()->findAll();
-			$param = array('types'=>$types);
-			$this->render('contributions',$param);
+			if (Yii::app()->Ini->isSuperAdmin()){
+				$types = ContributionType::model()->findAll();
+				$param = array('types'=>$types);
+				$this->render('contributions',$param);
+			}else {
+				$param = array('message'=>'You are not allowed to view this page.');
+				$this->render('error-page',$param);
+			}
 		}else {
 			$this->redirect(Yii::app()->homeUrl);
 		}

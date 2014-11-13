@@ -78,6 +78,7 @@ class ContributionajaxController extends Controller
     	$domain_id = $domain_details->domain_id;
     	$contributions = ContributionType::model()->findAll();
     	
+    	
     	$sql = "
     	SELECT * FROM members m
     	LEFT JOIN team_member tm ON (tm.`member_id` = m.`member_id`)
@@ -102,6 +103,8 @@ class ContributionajaxController extends Controller
     			$percent = round(Yii::app()->Ini->getPiePerDomain($row['member_id'],$row['domain_id']),2);
     			$members[$i]['total'] = $total;
     			$members[$i]['percent'] = $percent;
+    			$members[$i]['member_id'] = $row['member_id'];
+    			
     			$i++;
     			
     			
@@ -122,7 +125,8 @@ class ContributionajaxController extends Controller
     				$chart[$etype_id][] = array(
     						"name" => ucfirst($row['firstname']),
     						"type"=>$etype_name,
-    						"data" => $percent
+    						"data" => $percent,
+    						"member_id"=>$row['member_id']
     				);
     			}	 
     			
@@ -146,7 +150,8 @@ class ContributionajaxController extends Controller
     			$p[] = array(
     					"name"=>'Others',
     					"type" => $v->equity_name,
-    					"data" =>intval($equity_percent)
+    					"data" =>intval($equity_percent),
+    					"member_id"=>0
     			);
     		}
     	}
@@ -159,7 +164,17 @@ class ContributionajaxController extends Controller
     		$theo_value = 0;
     	}
     	
-    	$return['html'] = $this->renderPartial('summary', array('domain'=>$domain,'contributions'=>$contributions,'members'=>$rows,'members'=>$members,'p'=>$p,'theo_value'=>$theo_value), true);
+    	$monetization =  Yii::app()->Ini->getDomainMonetization($domain_id);
+    	if (!$monetization){
+    		$monetization = 0;
+    	}
+    	
+    	$expenses = Yii::app()->Ini->getTotalExpensesByDomain($domain_id);
+    	if (!$expenses){
+    		$expenses = 0;
+    	}
+    	
+    	$return['html'] = $this->renderPartial('summary', array('domain'=>$domain,'contributions'=>$contributions,'members'=>$rows,'members'=>$members,'p'=>$p,'theo_value'=>$theo_value,'monetization'=>$monetization,'expenses'=>$expenses), true);
     	$this->renderJSON($return, true);
     }
     

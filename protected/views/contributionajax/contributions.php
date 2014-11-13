@@ -8,15 +8,18 @@
 	              </div>
 	             <div class="panel-body">
 							<div id="notification"></div>
-									
+							<?php if (Yii::app()->Ini->hasAccess($domain)):?>		
 								<button type="button" id="deleteselected" class="btn btn-primary btn-xs"><i class="fa fa-trash"></i> Delete Selected</button>
-								
+							<?php endif?>	
+							
 							<br><br>		
 				           <div class="table-responsive">
 				                <table class="table table-striped table-bordered table-hover" id="ctable">
 				                      <thead>
 				                           <tr>
-				                             <th><input type="checkbox" id="checkall" class="checkall"></th>
+				                          
+				                             <th> <?php if (Yii::app()->Ini->hasAccess($domain)):?><input type="checkbox" id="checkall" class="checkall">
+				                             <?php endif?></th>
 				                             <th>Member</th>
 				                             <th>Contribution</th>
 				                             <th>Value</th>
@@ -28,7 +31,9 @@
 				                           <?php if (count($contributions)> 0):?>
 				                            	<?php foreach ($contributions as $key=>$row):?>
 				                            		<tr>
-				                            		    <td><input type="checkbox" id="cbox" name="cbox" value="<?php echo $row['c_id']?>"></td>
+				                            		
+				                            		    <td><?php if (Yii::app()->Ini->hasAccess($domain)):?><input type="checkbox" id="cbox" name="cbox" value="<?php echo $row['c_id']?>">
+				                            		 <?php endif?>   </td>
 				                            			<td><?php echo $row['firstname'].' '.$row['lastname']?></td>
 				                            			<td><?php echo $row['c_type']?></td>
 				                            			<td><?php echo $row['amount']?></td>

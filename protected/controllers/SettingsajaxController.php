@@ -142,4 +142,70 @@ class SettingsajaxController extends Controller
     	$this->renderJSON($return, true);
     }
     
+    public function expensesdatatable(){
+    	$domain = Yii::app()->Ini->v('domain');
+    	$domain_details = Domain::model()->findByAttributes(array('domain_name'=>$domain));
+    	$domain_id = $domain_details->domain_id;
+    	$columns = array('ex_id','description','amount','date_spent','added_by');
+    	echo Yii::app()->Datatables->generate($columns,'ex_id','domain_expenses','domain_id='.$domain_id);
+    }
+    
+    public function addexpenses($post){
+    	$return['html'] = $this->renderPartial('_form_add_expenses', array(), true);
+    	$this->renderJSON($return, true);
+    }
+    
+    public function saveexpenses($post){
+    	$description = $post['description'];
+    	$amount =   $post['amount'];
+    	$date =  $post['ex_date'];
+    	$domain = $post['domain'];
+    	$status = false;
+    	
+    	
+    	$domain = Yii::app()->Ini->v('domain');
+    	$domain_details = Domain::model()->findByAttributes(array('domain_name'=>$domain));
+    	$domain_id = $domain_details->domain_id;
+    	 
+    	if (isset($post['ex_id'])){
+    	  $model = DomainExpenses::model()->findByAttributes(array('ex_id'=>$post['ex_id']));	
+    	}else {
+    	  $model = new DomainExpenses();
+    	}
+    	$model->domain_id = $domain_id;
+    	$model->amount = $amount;
+    	$model->description = $description;
+    	$model->date_spent = $date;
+    	$model->added_by = Yii::app()->user->getId();
+    	if ($model->save()){
+    		$status = true;
+    	}else {
+    		var_dump($model->getErrors());
+    	}
+    	
+    	$return['status'] = $status;
+    	$this->renderJSON($return, true);
+    }
+    
+    public function editexpenses($post){
+    	$ex_id = $post['ex_id'];
+    	$model = DomainExpenses::model()->findByAttributes(array('ex_id'=>$ex_id));
+    	$return['html'] = $this->renderPartial('_form_edit_expenses', array('model'=>$model), true);
+    	$this->renderJSON($return, true);
+    }
+    
+    public function confirmdeleteexpense($post){
+    	$ex_id = $post['ex_id'];
+    	$model = DomainExpenses::model()->findByAttributes(array('ex_id'=>$ex_id));
+    	$return['html'] = $this->renderPartial('confirm_delete_expense', array('model'=>$model), true);
+    	$this->renderJSON($return, true);
+    }
+    
+    public function deleteexpense($post){
+    	$ex_id = $post['ex_id'];
+    	$model = DomainExpenses::model()->findByAttributes(array('ex_id'=>$ex_id));
+    	$model->delete();
+    	$return['status'] = true;
+    	$this->renderJSON($return, true);
+    }
 }

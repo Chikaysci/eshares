@@ -152,7 +152,7 @@ WHERE t.`domain_id` = $domain_id ORDER BY firstname
     	'order'=>'c_id'
     			));
     		
-    	$htmlParams = array('domain'=>$domain,'members'=>$members,'points'=>json_encode($p),'contributions'=>$contributions);
+    	$htmlParams = array('domain'=>$domain,'members'=>$members,'points'=>json_encode($p),'contributions'=>$contributions,'domain'=>$domain);
     	$return['html']           = $this->renderPartial('dashboard', $htmlParams, true);
     	$this->renderJSON($return, true);
     }

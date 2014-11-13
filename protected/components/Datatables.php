@@ -16,7 +16,7 @@ class Datatables extends CApplicationComponent
 	 * you want to insert a non-database field (for example a counter or static image)
 	 */
 	
-	public function generate($aColumns,$sIndexColumn,$sTable){
+	public function generate($aColumns,$sIndexColumn,$sTable,$where=null){
 	
 	
 	
@@ -93,6 +93,15 @@ class Datatables extends CApplicationComponent
 		}
 	}
 	
+	
+	//extra where field
+	if ($where){
+		if ($sWhere != ''){
+			$sWhere .= ' AND '.$where;
+		}else {
+			$sWhere = " WHERE ".$where;
+		}
+	}
 	
 	/*
 	 * SQL queries

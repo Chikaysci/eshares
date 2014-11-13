@@ -5,7 +5,7 @@
 				<div class="col-lg-12">
 					<div class="text-heading-bg text-center">
 						<h1>
-							Do not wait — <span class="highlight">share</span>  equity now!
+							Check your <span class="highlight">equity</span> today!
 						</h1>
 						
 						<form method="post" action="<?php echo Yii::app()->request->baseUrl; ?>/home" id="login-form" class="form-inline form-padd form-s1"> 

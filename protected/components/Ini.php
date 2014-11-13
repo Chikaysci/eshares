@@ -478,5 +478,87 @@ AND domain_contributions.`domain_id` = $domain_id
      	 
      	return $total;
      }
+     
+     public function getDomainMonetization($domain_id){
+     	$sql = "
+     	SELECT SUM(`referral_monetization_revenue`.`sale_amount`) AS total FROM 
+`referral_monetization_revenue` INNER JOIN 
+`referral_monetization_domains` ON (`referral_monetization_domains`.`ref_id` = referral_monetization_revenue.`ref_id`)
+WHERE referral_monetization_domains.`domain_id` = $domain_id
+     	";
+     
+     
+     	$dbCommand = Yii::app()->db->createCommand($sql);
+     	$rows = $dbCommand->queryAll();
+     	if (count($rows) >0){
+     	foreach ($rows as $k=>$v){
+     	$total = $v['total'];
+     	}
+     	}else {
+     	$total = 0;
+     	}
+     	 
+     	return $total;
+     	}
+     	
+
+      public function isSuperAdmin(){
+      	 $admin = array(8,12,1);
+      	 $status = false;
+      	 $userid = Yii::app()->user->getId();
+      	 if (in_array($userid, $admin)) {
+      	 	$status = true;
+      	 }
+      	 
+      	 return $status;
+      }
+      
+      public function hasAccess($domain){
+      	$has_access = false;
+      	$userid = Yii::app()->user->getId();
+      	
+      	$details = Members::model()->findByAttributes(array('member_id'=>$userid));
+      	if ($details->is_admin == 1){
+      		$has_access = true;
+      	}else {
+      		$sql = "
+      		SELECT COUNT(*) AS total FROM `team_member` INNER JOIN team ON (team.`team_id` = `team_member`.`team_id`)
+INNER JOIN domain ON (domain.`domain_id` = team.`domain_id`)
+WHERE team_member.`role_id` = 29 AND team_member.`member_id` = $userid AND domain.`domain_name` = '$domain'
+      		";
+      		$dbCommand = Yii::app()->db->createCommand($sql);
+      		$rows = $dbCommand->queryAll();
+      		if (count($rows) >0){
+      			foreach ($rows as $k=>$v){
+      				$total = $v['total'];
+      			}
+      		}else {
+      			$total = 0;
+      		}
+      		
+      		if ($total > 0){
+      			$has_access = true;
+      		}
+      	}
+      	
+      	return $has_access;
+      }
+      
+      public function getTotalExpensesByDomain($domain_id){
+      	$sql = "SELECT SUM(amount) AS total FROM domain_expenses WHERE domain_id = $domain_id";
+      	 
+	      	$dbCommand = Yii::app()->db->createCommand($sql);
+	      	$rows = $dbCommand->queryAll();
+	      	if (count($rows) >0){
+	      	foreach ($rows as $k=>$v){
+	      	$total = $v['total'];
+	      	}
+	      	}else {
+	      	$total = 0;
+	      	}
+      	 
+      	return $total;
+      	}
+      		 
     
 }

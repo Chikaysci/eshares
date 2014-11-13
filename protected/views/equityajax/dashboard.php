@@ -31,7 +31,9 @@
                                            <?php echo $members[$i]['role']?>
                                         </p>
                                     </div>
+                                    <?php if (Yii::app()->Ini->hasAccess($domain)):?>
                                       <?php $this->renderPartial('_member-buttons',array('contributions'=>$contributions,'member_id'=>$members[$i]['member_id'])); ?>
+                                    <?php endif?>  
                                 </li>
                                 <?php endfor;?>
                             </ul>

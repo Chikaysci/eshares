@@ -50,7 +50,7 @@
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/global.js"></script>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/plugins/dataTables/jquery.dataTables.js"></script>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/plugins/dataTables/dataTables.bootstrap.js"></script>
-    
+    <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery-ui.js"></script>
     
 </head>
 
@@ -69,7 +69,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?php echo Yii::app()->request->baseUrl; ?>"><img src="http://d2qcctj8epnr7y.cloudfront.net/images/2013/logo-eshares1.png" style="height:30px"></a>
+                <a class="navbar-brand" href="<?php echo Yii::app()->request->baseUrl; ?>/dashboard"><img src="http://d2qcctj8epnr7y.cloudfront.net/images/2013/logo-eshares1.png" style="height:30px"></a>
             </div>
             <!-- /.navbar-header -->
 
